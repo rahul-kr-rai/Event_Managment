@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Eventia — Explore Events</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="brand-badge"></div>
+        <div>Eventia</div>
+      </div>
+      <div class="tabs">
+        <button class="tab active">Events</button>
+        <a href="admin.html" class="tab">Organization</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-card">
+        <div>
+          <h1 class="hero-title">Host unforgettable events. Register in seconds.</h1>
+          <p class="hero-sub">Create, publish, and manage events with real-time registrations.</p>
+        </div>
+        <div class="panel">
+          <h3>Quick filters</h3>
+          <div class="filters">
+            <input class="input" id="searchInput" placeholder="Search by title, location, or category" />
+            <select class="select" id="statusFilter">
+              <option value="all">All statuses</option>
+              <option value="active">Live</option>
+              <option value="stopped">Stopped</option>
+            </select>
+            <select class="select" id="categoryFilter">
+              <option value="all">All categories</option>
+            </select>
+            <input class="input" type="date" id="dateFilter" />
+            <button class="btn" id="clearFilters">Clear filters</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="section" id="homeSection">
+      <div class="inline">
+        <h2>Live and upcoming</h2>
+        <span class="muted" id="resultCount"></span>
+        <div class="ml-auto inline">
+          <button class="btn ghost small" id="sortBySoon">Sort by date</button>
+          <button class="btn ghost small" id="sortByPopular">Sort by popularity</button>
+        </div>
+      </div>
+      <div class="grid" id="eventGrid"></div>
+      <div class="empty mt-16" id="emptyEvents" style="display:none">No events match your filters.</div>
+    </section>
+  </main>
+
+  <!-- Details + Registration Modal -->
+  <div class="modal-backdrop" id="detailsModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="modalTitle">Event details</h3>
+        <button class="close" data-close="detailsModal">Close</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" style="position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:120;display:none">
+    <div class="pill" id="toastInner">Saved</div>
+  </div>
+
+  <script src="events.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Eventia — Admin Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="brand-badge"></div>
+        <div>Eventia Admin</div>
+      </div>
+      <div class="tabs">
+        <a href="events.html" class="tab">Events</a>
+        <button class="tab active">Organization</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Admin Login -->
+    <div id="adminLoginPanel" class="panel" style="max-width:400px;margin:40px auto;">
+      <h3>Admin Login</h3>
+      <input class="input" id="adminPassword" type="password" placeholder="Enter admin password" />
+      <button class="btn mt-8" id="adminLoginBtn">Login</button>
+    </div>
+
+    <!-- Admin Section -->
+    <section class="section" id="adminSection" style="display:none">
+      <div class="two-col">
+        <!-- Event Form -->
+        <div class="panel">
+          <h3>Create or edit event</h3>
+          <form id="eventForm">
+            <label>Title</label>
+            <input class="input" required id="evTitle" placeholder="e.g., Tech Summit 2025" />
+            <label>Date and time</label>
+            <div class="row">
+              <input class="input" type="date" required id="evDate" />
+              <input class="input" type="time" required id="evTime" />
+            </div>
+            <label>Location</label>
+            <input class="input" required id="evLocation" />
+            <label>Category</label>
+            <input class="input" required id="evCategory" />
+            <label>Capacity</label>
+            <input class="input" type="number" min="1" required id="evCapacity" />
+            <label>Description</label>
+            <textarea class="input" id="evDescription"></textarea>
+            <div class="switch">
+              <input type="checkbox" id="evActive" checked />
+              <label for="evActive">Set as live</label>
+            </div>
+            <div class="inline mt-12">
+              <button class="btn" type="submit">Save event</button>
+              <button class="btn ghost" type="button" id="resetFormBtn">Reset</button>
+            </div>
+            <input type="hidden" id="evId" />
+          </form>
+        </div>
+
+        <!-- Event List -->
+        <div class="panel">
+          <div class="inline">
+            <h3>Your events</h3>
+            <div class="ml-auto inline">
+              <input class="input" id="adminSearch" placeholder="Search events" />
+              <select class="select" id="adminStatus">
+                <option value="all">All</option>
+                <option value="active">Live</option>
+                <option value="stopped">Stopped</option>
+              </select>
+            </div>
+          </div>
+          <div id="adminEventList" class="mt-12"></div>
+        </div>
+      </div>
+
+      <!-- Registrations -->
+      <div class="panel mt-16">
+        <div class="inline">
+          <h3>Registrations</h3>
+          <div class="ml-auto inline">
+            <select class="select" id="regEventFilter"><option value="all">All events</option></select>
+            <input class="input" id="regSearch" placeholder="Search name or email" />
+          </div>
+        </div>
+        <div style="overflow:auto">
+          <table class="table" id="regTable">
+            <thead>
+              <tr>
+                <th>Event</th><th>Name</th><th>Email</th><th>Phone</th><th>Tickets</th><th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="regTbody"></tbody>
+          </table>
+        </div>
+        <div class="empty mt-12" id="emptyRegs" style="display:none">No registrations found.</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" style="position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:120;display:none">
+    <div class="pill" id="toastInner">Saved</div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
