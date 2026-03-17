@@ -18,15 +18,15 @@ const PORT = process.env.PORT || 5000;
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'rr493377@gmail.com', 
-    pass: 'fmoxhwpnhgsktbf'   
+    user: process.env.GMAIL_USER, 
+    pass: process.env.GMAIL_PASS   
   }
 });
 
 // RAZORPAY INSTANCE
 const razorpay = new Razorpay({
-  key_id: 'rzp_test_Ro4Mcyum4HfPMy',     
-  key_secret: 'VVgkfOBJeAmaRuN2Hf9KjI5R' 
+  key_id: process.env.RAZORPAY_KEY_ID,     
+  key_secret: process.env.RAZORPAY_KEY_SECRET 
 });
 
 app.use(cors());
@@ -34,7 +34,6 @@ app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/eventhub';
-mongoose.connect(MONGO_URI).then(() => console.log('MongoDB Connected')).catch(err => console.log(err));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
@@ -69,6 +68,38 @@ const EventSchema = new mongoose.Schema({
   imageUrl: { type: String }
 });
 const EventModel = mongoose.model('Event', EventSchema);
+
+const demoEvents = require('./demoEvents');
+
+async function seedDemoEvents() {
+  try {
+    let count = 0;
+    for (const dEvent of demoEvents) {
+      const res = await EventModel.updateOne(
+        { title: dEvent.title },
+        { $set: dEvent },
+        { upsert: true }
+      );
+      if (res.upsertedCount > 0 || res.modifiedCount > 0) {
+        count++;
+      }
+    }
+    if (count > 0) {
+      console.log(`Seeded or updated ${count} demo event(s).`);
+    } else {
+      console.log('Demo events already exist and are up to date; skipping seeding.');
+    }
+  } catch (err) {
+    console.error('Error seeding demo events:', err);
+  }
+}
+
+mongoose.connect(MONGO_URI)
+  .then(async () => {
+    console.log('MongoDB Connected');
+    await seedDemoEvents();
+  })
+  .catch(err => console.log(err));
 
 const RegistrationSchema = new mongoose.Schema({
   eventId: String,
@@ -128,9 +159,9 @@ app.post('/api/payment/verify', async (req, res) => {
     
     // --- FIX: USE YOUR REAL SECRET KEY HERE ---
     const expectedSign = crypto
-      .createHmac("sha256", 'VVgkfOBJeAmaRuN2Hf9KjI5R') 
-      .update(sign.toString())
-      .digest("hex");
+    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET) // Use env variable
+    .update(sign.toString())
+    .digest("hex");
 
     if (razorpay_signature === expectedSign) {
       res.json({ message: "Payment Verified Successfully" });
